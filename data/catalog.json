@@ -1,0 +1,99 @@
+{
+  "_comment": "Bazaar walled-garden catalog — single source of truth. Seeds Butterbase products + Neo4j merchants. Prices span Mandate thresholds: <=$25 auto, $25-60 approval, big-ticket + non-allowed categories = denial beats.",
+  "policy": {
+    "allowed_categories": ["apparel", "consumables"],
+    "per_txn_approval_over": 25
+  },
+  "merchants": [
+    {
+      "slug": "bobs-tshirts",
+      "name": "Bob's T-Shirts",
+      "category": "apparel",
+      "trusted": true,
+      "source": "garden",
+      "blurb": "Honest cotton. No logos you didn't ask for.",
+      "products": [
+        { "sku": "sku_bobs-tshirts_1", "name": "Plain White Tee", "price": 12, "stock": 40, "emoji": "👕" },
+        { "sku": "sku_bobs-tshirts_2", "name": "Pocket Tee", "price": 15, "stock": 32, "emoji": "👕" },
+        { "sku": "sku_bobs-tshirts_3", "name": "Cap", "price": 18, "stock": 25, "emoji": "🧢" },
+        { "sku": "sku_bobs-tshirts_4", "name": "Beanie", "price": 16, "stock": 30, "emoji": "🧶" },
+        { "sku": "sku_bobs-tshirts_5", "name": "Crew Socks (3pk)", "price": 9, "stock": 60, "emoji": "🧦" },
+        { "sku": "sku_bobs-tshirts_6", "name": "Long-Sleeve Tee", "price": 22, "stock": 28, "emoji": "👕" },
+        { "sku": "sku_bobs-tshirts_7", "name": "Graphite Hoodie", "price": 30, "stock": 18, "emoji": "🧥" },
+        { "sku": "sku_bobs-tshirts_8", "name": "Denim Jacket", "price": 58, "stock": 8, "emoji": "🧥" }
+      ]
+    },
+    {
+      "slug": "daily-grind",
+      "name": "Daily Grind Coffee",
+      "category": "consumables",
+      "trusted": true,
+      "source": "garden",
+      "blurb": "Roasted this week. Shipped tomorrow.",
+      "products": [
+        { "sku": "sku_daily-grind_1", "name": "Paper Filters (100)", "price": 6, "stock": 80, "emoji": "☕" },
+        { "sku": "sku_daily-grind_2", "name": "Sampler Trio", "price": 15, "stock": 40, "emoji": "📦" },
+        { "sku": "sku_daily-grind_3", "name": "House Blend 1kg", "price": 19, "stock": 50, "emoji": "☕" },
+        { "sku": "sku_daily-grind_4", "name": "Travel Tumbler", "price": 19, "stock": 35, "emoji": "🥤" },
+        { "sku": "sku_daily-grind_5", "name": "Espresso Beans 1kg", "price": 22, "stock": 30, "emoji": "🫘" },
+        { "sku": "sku_daily-grind_6", "name": "Single-Origin 1kg", "price": 24, "stock": 22, "emoji": "☕" },
+        { "sku": "sku_daily-grind_7", "name": "Cold Brew Kit", "price": 27, "stock": 15, "emoji": "🧊" },
+        { "sku": "sku_daily-grind_8", "name": "Burr Grinder", "price": 45, "stock": 10, "emoji": "⚙️" }
+      ]
+    },
+    {
+      "slug": "peak-supply",
+      "name": "Peak Supply Co",
+      "category": "outdoor",
+      "trusted": true,
+      "source": "garden",
+      "blurb": "Gear that comes back with you.",
+      "products": [
+        { "sku": "sku_peak-supply_1", "name": "Camp Mug", "price": 11, "stock": 45, "emoji": "🍵" },
+        { "sku": "sku_peak-supply_2", "name": "Trail Bottle", "price": 14, "stock": 38, "emoji": "🍶" },
+        { "sku": "sku_peak-supply_3", "name": "Dry Bag 10L", "price": 24, "stock": 26, "emoji": "🎒" },
+        { "sku": "sku_peak-supply_4", "name": "Headlamp", "price": 29, "stock": 20, "emoji": "🔦" },
+        { "sku": "sku_peak-supply_5", "name": "Trekking Poles", "price": 45, "stock": 12, "emoji": "🥢" },
+        { "sku": "sku_peak-supply_6", "name": "Rain Shell", "price": 80, "stock": 9, "emoji": "🧥" },
+        { "sku": "sku_peak-supply_7", "name": "Merino Socks", "price": 18, "stock": 40, "emoji": "🧦" },
+        { "sku": "sku_peak-supply_8", "name": "Compact Stove", "price": 55, "stock": 7, "emoji": "🔥" }
+      ]
+    },
+    {
+      "slug": "pixel-pine",
+      "name": "Pixel & Pine",
+      "category": "electronics",
+      "trusted": true,
+      "source": "garden",
+      "blurb": "Quiet, fast, and built to last.",
+      "products": [
+        { "sku": "sku_pixel-pine_1", "name": "HDMI Cable 2m", "price": 12, "stock": 70, "emoji": "🔌" },
+        { "sku": "sku_pixel-pine_2", "name": "Wireless Mouse", "price": 29, "stock": 30, "emoji": "🖱️" },
+        { "sku": "sku_pixel-pine_3", "name": "Laptop Stand", "price": 34, "stock": 24, "emoji": "💻" },
+        { "sku": "sku_pixel-pine_4", "name": "USB-C Hub", "price": 39, "stock": 26, "emoji": "🔗" },
+        { "sku": "sku_pixel-pine_5", "name": "1080p Webcam", "price": 59, "stock": 18, "emoji": "📷" },
+        { "sku": "sku_pixel-pine_6", "name": "1TB NVMe SSD", "price": 89, "stock": 15, "emoji": "💾" },
+        { "sku": "sku_pixel-pine_7", "name": "Mechanical Keyboard", "price": 95, "stock": 14, "emoji": "⌨️" },
+        { "sku": "sku_pixel-pine_8", "name": "RTX-Class GPU", "price": 500, "stock": 5, "emoji": "🎮" }
+      ]
+    },
+    {
+      "slug": "paper-trail",
+      "name": "Paper Trail Books",
+      "category": "books",
+      "trusted": true,
+      "source": "garden",
+      "blurb": "Ink on paper. Still undefeated.",
+      "products": [
+        { "sku": "sku_paper-trail_1", "name": "Sticker Pack", "price": 5, "stock": 90, "emoji": "🏷️" },
+        { "sku": "sku_paper-trail_2", "name": "Dot-Grid Notebook", "price": 8, "stock": 55, "emoji": "📒" },
+        { "sku": "sku_paper-trail_3", "name": "Sci-Fi Paperback", "price": 9, "stock": 48, "emoji": "📕" },
+        { "sku": "sku_paper-trail_4", "name": "Art Print A3", "price": 14, "stock": 30, "emoji": "🖼️" },
+        { "sku": "sku_paper-trail_5", "name": "Hardcover Novel", "price": 19, "stock": 26, "emoji": "📗" },
+        { "sku": "sku_paper-trail_6", "name": "2026 Planner", "price": 22, "stock": 33, "emoji": "📅" },
+        { "sku": "sku_paper-trail_7", "name": "Fountain Pen", "price": 28, "stock": 20, "emoji": "🖊️" },
+        { "sku": "sku_paper-trail_8", "name": "Graph Databases (book)", "price": 42, "stock": 12, "emoji": "📘" }
+      ]
+    }
+  ]
+}
