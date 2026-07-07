@@ -41,7 +41,7 @@ export type Emit = (e: {
 // All pacing lives here — tune these to speed up / slow down the whole demo.
 const T = {
   connect: [400, 700],
-  think: [500, 900],
+  think: [700, 1260], // ~40% slower than tool/log beats — the agent visibly mulls it over
   tool: [350, 950],
   log: [140, 300],
   finalize: [900, 1400],
