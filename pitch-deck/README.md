@@ -27,8 +27,8 @@ open pitch-deck/index.html
 Walk left-to-right on the architecture bar, then read each stack card:
 
 1. **Butterbase** — "The catalog and checkout live here. Postgres holds products, suppliers, offers. Functions handle search and orders. Auth, billing, AI gateway, deployed frontend."
-2. **Neo4j** — "Relationships, not rows. Suppliers connect to products through offers. Cypher traversals rank dealers and trace every order back to its source."
-3. **RocketRide** — "The shop-agent pipeline runs on RocketRide Cloud — search, rank, narrate — as a managed endpoint the app calls in production."
+2. **Neo4j** — "Memory and relationships, not rows. It stores your preferences, the agents' memory across sessions, and supplier information as a graph — who fulfills for whom, reliability propagation — so ranking gets personal and gets smarter over time."
+3. **RocketRide** — "The AI agents that handle shopping and purchases run on RocketRide — search, rank, narrate, order — as managed agents the app calls in production, reading and writing memory in Neo4j."
 
 Close: *"One database + pay once."*
 
