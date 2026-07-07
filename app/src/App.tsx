@@ -6,7 +6,8 @@ import { ChatPanel, type ChatMsg } from "./components/ChatPanel";
 import { DatabaseView } from "./components/DatabaseView";
 import { DealerDrawer } from "./components/DealerDrawer";
 import { ConfirmationCard } from "./components/ConfirmationCard";
-import { runAgent, runBuy, type AgentResult, type Emit, type Step } from "./lib/agent";
+import { ProcessingOverlay } from "./components/ProcessingOverlay";
+import { runAgent, runBuy, isBuyIntent, type AgentResult, type Emit, type Step } from "./lib/agent";
 import { listOffers, rowByOffer, type Confirmation } from "./lib/search";
 import type { Row } from "./data/mercato";
 
@@ -22,13 +23,15 @@ type State = {
   view: View;
   selectedProductId: string | null;
   confirmation: Confirmation | null;
+  placingOrder: boolean;
   spentCents: number;
   gen: number;
 };
 
 type Action =
-  | { type: "user"; text: string }
+  | { type: "user"; text: string; buy?: boolean }
   | { type: "step"; step: Step }
+  | { type: "resolveTool"; result: string; ms: number }
   | { type: "query"; query: string }
   | { type: "searchResult"; rows: Row[] }
   | { type: "agentMsg"; text: string }
@@ -44,7 +47,7 @@ function initial(): State {
   return {
     seq: 0, messages: [], running: false, query: null,
     rows: listOffers(), matched: null, view: "table",
-    selectedProductId: null, confirmation: null, spentCents: 0, gen: 0,
+    selectedProductId: null, confirmation: null, placingOrder: false, spentCents: 0, gen: 0,
   };
 }
 
@@ -53,7 +56,7 @@ function reducer(s: State, a: Action): State {
     case "user": {
       const uid = s.seq, sid = s.seq + 1;
       return {
-        ...s, seq: s.seq + 2, running: true,
+        ...s, seq: s.seq + 2, running: true, placingOrder: !!a.buy,
         messages: [...s.messages, { id: uid, role: "user", text: a.text }, { id: sid, role: "steps", steps: [] }],
       };
     }
@@ -63,10 +66,28 @@ function reducer(s: State, a: Action): State {
       if (last && last.role === "steps") msgs[msgs.length - 1] = { ...last, steps: [...last.steps, a.step] };
       return { ...s, messages: msgs };
     }
+    case "resolveTool": {
+      const msgs = s.messages.slice();
+      for (let i = msgs.length - 1; i >= 0; i--) {
+        const m = msgs[i];
+        if (m.role !== "steps") continue;
+        const steps = m.steps.slice();
+        for (let j = steps.length - 1; j >= 0; j--) {
+          const st = steps[j];
+          if (st.kind === "tool" && st.running) {
+            steps[j] = { ...st, running: false, result: a.result, ms: a.ms };
+            msgs[i] = { ...m, steps };
+            return { ...s, messages: msgs };
+          }
+        }
+        break;
+      }
+      return s;
+    }
     case "query": return { ...s, query: a.query };
     case "searchResult": return { ...s, rows: a.rows, matched: a.rows.length, gen: s.gen + 1 };
     case "agentMsg": return { ...s, messages: [...s.messages, { id: s.seq, role: "agent", text: a.text }], seq: s.seq + 1 };
-    case "buyResult": return { ...s, confirmation: a.confirmation, spentCents: s.spentCents + a.confirmation.totalCents };
+    case "buyResult": return { ...s, confirmation: a.confirmation, placingOrder: false, spentCents: s.spentCents + a.confirmation.totalCents };
     case "done": return { ...s, running: false };
     case "view": return { ...s, view: a.view };
     case "select": return { ...s, selectedProductId: a.productId };
@@ -77,12 +98,21 @@ function reducer(s: State, a: Action): State {
   }
 }
 
+function latestSteps(messages: ChatMsg[]): Step[] {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role === "steps") return m.steps;
+  }
+  return [];
+}
+
 export default function App() {
   const [s, dispatch] = useReducer(reducer, undefined, initial);
 
   const emit: Emit = (e) => {
     if (e.step) dispatch({ type: "step", step: e.step });
     if (e.query) dispatch({ type: "query", query: e.query });
+    if (e.resolve) dispatch({ type: "resolveTool", result: e.resolve.result, ms: e.resolve.ms });
   };
 
   function apply(result: AgentResult) {
@@ -100,7 +130,7 @@ export default function App() {
 
   async function handleSubmit(text: string) {
     if (s.running) return;
-    dispatch({ type: "user", text });
+    dispatch({ type: "user", text, buy: isBuyIntent(text) });
     apply(await runAgent(text, emit));
   }
 
@@ -109,9 +139,11 @@ export default function App() {
     const row = rowByOffer(offerId);
     const text = row ? `Buy the ${row.product.name} from ${row.dealer.name}` : "Buy this";
     dispatch({ type: "closeDrawer" });
-    dispatch({ type: "user", text });
+    dispatch({ type: "user", text, buy: true });
     apply(await runBuy(offerId, emit));
   }
+
+  const activeSteps = latestSteps(s.messages);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -149,6 +181,12 @@ export default function App() {
             onClose={() => dispatch({ type: "closeDrawer" })}
             onBuy={handleBuy}
           />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {s.placingOrder && !s.confirmation && (
+          <ProcessingOverlay key="processing" steps={activeSteps} />
         )}
       </AnimatePresence>
 

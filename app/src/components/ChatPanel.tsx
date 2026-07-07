@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import type { Step } from "../lib/agent";
 import { Chip } from "./ui";
+import { StepList } from "./StepList";
 
 export type ChatMsg =
   | { id: number; role: "user"; text: string }
@@ -16,13 +17,6 @@ const PRESETS = [
   "Best-rated coffee beans",
   "Buy the cheapest RTX 5070",
 ];
-
-const toneColor: Record<Step["tone"], string> = {
-  info: "var(--ink-500)",
-  pending: "var(--color-pending)",
-  authorized: "var(--color-authorized)",
-  denied: "var(--color-denied)",
-};
 
 export function ChatPanel({
   messages, running, onSubmit,
@@ -69,23 +63,25 @@ export function ChatPanel({
               </div>
             );
           }
-          // steps (system log)
+          // steps (reasoning + tool calls + system log)
           return (
             <div key={m.id} className="bg-[color:var(--color-surface-sunken)] border border-[color:var(--color-border)] px-3 py-2">
-              {m.steps.map((s, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -4 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className="flex items-center gap-2 py-0.5"
-                >
-                  <span className="inline-block w-1.5 h-1.5 rounded-full shrink-0" style={{ background: toneColor[s.tone] }} />
-                  <span className="t-label" style={{ color: toneColor[s.tone], letterSpacing: "0.08em" }}>{s.text}</span>
-                </motion.div>
-              ))}
+              <StepList steps={m.steps} />
             </div>
           );
         })}
+
+        {running && (
+          <div className="flex items-center gap-2 t-label text-text-label pl-1">
+            <motion.span
+              animate={{ opacity: [1, 0.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{ background: "var(--color-pending)" }}
+            />
+            AGENT WORKING…
+          </div>
+        )}
       </div>
 
       <div className="border-t border-[color:var(--color-border)] p-3 space-y-2">
